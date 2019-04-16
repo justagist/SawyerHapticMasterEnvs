@@ -1,0 +1,22 @@
+﻿Build started 16/04/2019 22:55:15.
+     1>Project "D:\new_hm - Copy\hapticmasterudp\hapticMasterUDP.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\hapticMasterUDP.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       ResourceCompile:
+         All outputs are up-to-date.
+       ManifestResourceCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+       Manifest:
+         All outputs are up-to-date.
+       FinalizeBuildStatus:
+         Deleting file "Debug\hapticMasterUDP.unsuccessfulbuild".
+         Touching "Debug\hapticMasterUDP.lastbuildstate".
+     1>Done Building Project "D:\new_hm - Copy\hapticmasterudp\hapticMasterUDP.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.04

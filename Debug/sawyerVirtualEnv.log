@@ -1,0 +1,50 @@
+﻿Build started 16/04/2019 22:59:09.
+     1>Project "D:\new_hm - Copy\hapticmasterudp\sawyerVirtualEnv.vcxproj" on node 2 (rebuild target(s)).
+     1>_PrepareForClean:
+         Deleting file "Debug\sawyerVirtualEnv.lastbuildstate".
+       InitializeBuildStatus:
+         Creating "Debug\sawyerVirtualEnv.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IGlut32 /ILibraries /Ilib /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt porridgeEnvSetup.cpp Timer.cpp
+         Timer.cpp
+         porridgeEnvSetup.cpp
+     1>d:\new_hm - copy\hapticmasterudp\hapticmaster.h(102): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : see declaration of 'sprintf'
+     1>d:\new_hm - copy\hapticmasterudp\hapticmaster.h(130): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : see declaration of 'sprintf'
+     1>d:\new_hm - copy\hapticmasterudp\hapticmaster.h(159): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : see declaration of 'sprintf'
+     1>d:\new_hm - copy\hapticmasterudp\hapticmaster.h(185): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : see declaration of 'sprintf'
+     1>d:\new_hm - copy\hapticmasterudp\porridgeenvsetup.cpp(280): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strdup. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\string.h(238) : see declaration of 'strdup'
+     1>d:\new_hm - copy\hapticmasterudp\porridgeenvsetup.cpp(322): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\string.h(105) : see declaration of 'strcpy'
+         Generating Code...
+       ResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /D _UNICODE /D UNICODE /l"0x0409" /nologo /fo"Debug\hapticMasterUDP.res" hapticMasterUDP.rc 
+       ManifestResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\sawyerVirtualEnv.exe.embed.manifest.res" Debug\sawyerVirtualEnv_manifest.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\new_hm - Copy\hapticmasterudp\Debug\sawyerVirtualEnv.exe" /INCREMENTAL /NOLOGO /LIBPATH:Glut32 /LIBPATH:lib /LIBPATH:Libraries lib/HapticAPI.lib ws2_32.lib Glut32/glut32.lib lib/FcsOpenglD.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\sawyerVirtualEnv.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\new_hm - Copy\hapticmasterudp\Debug\sawyerVirtualEnv.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\new_hm - Copy\hapticmasterudp\Debug\sawyerVirtualEnv.lib" /MACHINE:X86 Debug\hapticMasterUDP.res
+         Debug\sawyerVirtualEnv.exe.embed.manifest.res
+         Debug\porridgeEnvSetup.obj
+         Debug\Timer.obj
+       Manifest:
+         Deleting file "Debug\sawyerVirtualEnv.exe.embed.manifest".
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\sawyerVirtualEnv.exe.embed.manifest" /manifest Debug\sawyerVirtualEnv.exe.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\sawyerVirtualEnv.exe.embed.manifest.res" Debug\sawyerVirtualEnv_manifest.rc 
+       LinkEmbedManifest:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\new_hm - Copy\hapticmasterudp\Debug\sawyerVirtualEnv.exe" /INCREMENTAL /NOLOGO /LIBPATH:Glut32 /LIBPATH:lib /LIBPATH:Libraries lib/HapticAPI.lib ws2_32.lib Glut32/glut32.lib lib/FcsOpenglD.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\sawyerVirtualEnv.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\new_hm - Copy\hapticmasterudp\Debug\sawyerVirtualEnv.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\new_hm - Copy\hapticmasterudp\Debug\sawyerVirtualEnv.lib" /MACHINE:X86 Debug\hapticMasterUDP.res
+         Debug\sawyerVirtualEnv.exe.embed.manifest.res
+         Debug\porridgeEnvSetup.obj
+         Debug\Timer.obj
+         sawyerVirtualEnv.vcxproj -> D:\new_hm - Copy\hapticmasterudp\Debug\sawyerVirtualEnv.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\sawyerVirtualEnv.unsuccessfulbuild".
+         Touching "Debug\sawyerVirtualEnv.lastbuildstate".
+     1>Done Building Project "D:\new_hm - Copy\hapticmasterudp\sawyerVirtualEnv.vcxproj" (rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.71
