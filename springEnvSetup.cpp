@@ -4,11 +4,11 @@
 using namespace std;
 #include <process.h>
 
-#include "HapticAPI.h"
-#include "HapticMaster.h"
-#include "HapticMasterOpenGl.h"
+#include "include/HapticAPI.h"
+#include "include/HapticMaster.h"
+#include "include/HapticMasterOpenGl.h"
 #include "glut.h"
-#include "Vector3d.h"
+#include "include/Vector3d.h"
 #include <Windows.h>
 #include <math.h>
 #include <random>
@@ -19,26 +19,21 @@ using namespace std;
 #include <cstdlib>
 #include <sys/timeb.h>
 
-enum axis {X_axis, Y_axis, Z_axis, NONE};
 /////////////////////////////////////////////////
-// Environment Parameters
+// Environment Parameters -- Linear Spring
 /////////////////////////////////////////////////
-double maxDampingFactor = 70.0;
-double planePlay[2] = {0.01, 0.01}; // play in plane for remaining in plane (along both directions)
-double minVelToChangeDamping = 0.01; // step count is incremented if velocity is above this value
-double dampingIncrement = 0.05; // increment in dampingFactor per 10 steps
-axis constrainPlaneNormal = X_axis; // Normal of the plane to constrain motion (X_axis / Y_axis / Z_axis / NONE)
+double springStiffness = 00;
+double springPos[] = {-0.233, -0.100, -0.111}; // if spring is to be at current end-effector position, set makeSpringHere = true
+bool makeSpringHere = false; // if set to true, initial value of springPos is ignored
+double springDampFactor = 0.7;
+double springMaxForce = 7.0;
 
 bool visualiseEnv = false;
 /////////////////////////////////////////////////
 
-
-double blockStiffnessEnv = 20000.0; // stiffness of blocks
-double dampingFactor = 0.0; // starting damping factor
-
 double virtualPos[3] = {0.0, 0.0, 0.0};
 
-#include "HapticGraphicsVisualiser.h"
+#include "include/HapticGraphicsVisualiser.h"
 
 // ----- Global variables
 bool bContinue = true;
@@ -49,9 +44,6 @@ double *precvData = recvData;
 // ----- HapticMASTER handles
 long device = 0;
 char response[100];
-
-double distBetweenPoints;
-Vector3d prevPos;
 
 FILE *fp;
 float** theMatrix;
@@ -181,21 +173,47 @@ void UDPrecv(void *pParam)
 */
 void setInitEnv()
 {
+		Vector3d prevPos;
 		haSendCommand(device, "get measpos", response);
 		ParseFloatVec(response, prevPos.x, prevPos.y, prevPos.z);
 
-		if ( haSendCommand(device, "create damper myDamper", response) )
+		if (makeSpringHere)
 		{
-			printf ( "--- ERROR: Could not send command create damper myDamper" );   
+			springPos[PosX] = prevPos.x; springPos[PosY] = prevPos.y; springPos[PosZ] = prevPos.z;
 		}
 
-		printf("create damper myDamper ==> %s\n", response);
+		      // Create the Haptic spring Effect and supply it with parameters
+      if ( haSendCommand(device, "create spring mySpring", response) ) {
+         printf("--- ERROR: Could not send command create spring mySpring\n");
+      }
 
-		if ( strstr ( response, "--- ERROR:" ) )
-		{
-			getchar();
-			exit(-1);
-		}
+      printf("create spring mySpring ==> %s\n", response);
+
+      if ( strstr ( response, "--- ERROR:" ) ) {
+         getchar();
+         exit(-1);
+      }
+      else {
+         haSendCommand(device, "set mySpring stiffness", springStiffness, response);
+         printf("set mySpring stiffness %g ==> %s\n", springStiffness, response);
+         
+         haSendCommand(device, "set mySpring pos", springPos[PosX], springPos[PosY], springPos[PosZ], response);
+         printf("set mySpring pos [%g,%g,%g] ==> %s\n", springPos[PosX], springPos[PosY], springPos[PosZ], response);
+         
+         haSendCommand(device, "set mySpring dampfactor", springDampFactor, response);
+         printf("set mySpring dampfactor %g ==> %s\n", springDampFactor, response);
+         
+         haSendCommand(device, "set mySpring maxforce", springMaxForce, response);
+         printf("set mySpring maxforce %g ==> %s\n", springMaxForce, response);
+         
+         haSendCommand(device, "set mySpring enable", response);
+         printf("set mySpring enable ==> %s\n", response);
+      }
+
+	  if (visualiseEnv)
+	  {
+		  HMVisualiser::addSpring(springPos);
+	  }
 	
 		
 }
@@ -217,10 +235,10 @@ void Graphics(void *pParam)
 	
 	glutCreateWindow ("HapticAPI Programming Manual : Example07: More Haptic effects");
 	haSendCommand( device, "get modelpos", response );
-	InitOpenGl();
+	HMVisualiser::InitOpenGl();
 
-	glutReshapeFunc(Reshape);
-	glutDisplayFunc(Display);
+	glutReshapeFunc(HMVisualiser::Reshape);
+	glutDisplayFunc(HMVisualiser::Display);
 	glutMainLoop();
 
 	_endthread();
@@ -341,39 +359,19 @@ int main(void)
 
 			virtualPos[0] = measPos.x;   virtualPos[1] = measPos.y;   virtualPos[2] = measPos.z;
 
-			distBetweenPoints = measVel.length();
-
-			//if (stepCounter % 1000 == 0)
+			if (stepCounter % 1000 == 0)
+			{
+				printf("\rPosition: %f,%f,%f	; Force:  %f,%f,%f", measPos.x, measPos.y, measPos.z, measForce.x, measForce.y, measForce.z);
+				fflush(stdout);
 				//printf("Step %d: Current damping factor %f\n",stepCounter,distBetweenPoints);
-			//printf("currPoint: %f,%f,%f ; distance: %f\n", measPos.x, measPos.y, measPos.z, distBetweenPoints);
-			
-			prevPos = Vector3d(measPos);
-			
+			}
 			int ret = sendto( s, (char *)hapticData, pkt_length, 0, (sockaddr *)&destination, sizeof(destination) ); // send packet
 			if(ret==SOCKET_ERROR){
 				std::cout<<"ERROR\n";
 				break;
 			}
-			if (dampingFactor <= maxDampingFactor)
-			{
-				if (stepCounter % 10 == 1){
-					dampingFactor += dampingIncrement;
-					haSendCommand(device, "set myDamper dampcoef", dampingFactor, dampingFactor, dampingFactor, response);
-					haSendCommand(device, "set myDamper enable", response);
-					if (stepCounter % 100 == 1){
-						printf("\rStep %d: Current damping factor %f",stepCounter,dampingFactor);
-						//printf("Current damping factor %f\n\n",measForce.length());
-						fflush(stdout);
-					}
-				
-				}
-			
-				// ----- Increase damping with distance
-				if (distBetweenPoints >= minVelToChangeDamping)
-				{
-					stepCounter ++;
-				}
-			}
+
+			stepCounter ++;
 		}
 	}
 

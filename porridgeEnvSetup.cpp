@@ -34,7 +34,7 @@ bool visualiseEnv = false;
 
 
 double blockStiffnessEnv = 20000.0; // stiffness of blocks
-double dampingFactor = 0.0; // starting damping factor
+double dampingFactor = 5.0; // starting damping factor
 
 double virtualPos[3] = {0.0, 0.0, 0.0};
 
@@ -42,7 +42,6 @@ double virtualPos[3] = {0.0, 0.0, 0.0};
 
 // ----- Global variables
 bool bContinue = true;
-int gUpdateRateCounter;
 double recvData[3];
 double *precvData = recvData;
 
@@ -106,9 +105,6 @@ void KbMon(void *pParam)
 	{  
       
 		Sleep(1000);
-
-		//printf( "Loops: %i\n", gUpdateRateCounter );
-		gUpdateRateCounter = 0;
 
 		if ( _kbhit() )
 		{
@@ -262,8 +258,8 @@ void setInitEnv()
 
 		if (visualiseEnv)
 		{
-			addBlock(blockPos1,blockSize1);
-			addBlock(blockPos2,blockSize2);
+			HMVisualiser::addBlock(blockPos1,blockSize1);
+			HMVisualiser::addBlock(blockPos2,blockSize2);
 		}
 
 		if ( haSendCommand(device, "create damper myDamper", response) )
@@ -299,10 +295,10 @@ void Graphics(void *pParam)
 	
 	glutCreateWindow ("HapticAPI Programming Manual : Example07: More Haptic effects");
 	haSendCommand( device, "get modelpos", response );
-	InitOpenGl();
+	HMVisualiser::InitOpenGl();
 
-	glutReshapeFunc(Reshape);
-	glutDisplayFunc(Display);
+	glutReshapeFunc(HMVisualiser::Reshape);
+	glutDisplayFunc(HMVisualiser::Display);
 	glutMainLoop();
 
 	_endthread();
@@ -394,15 +390,62 @@ int main(void)
 		setInitEnv();
 		printf("\n_______________________________________________________\n");
 		printf("OPTIONS:\n");
-		printf("Press Enter to stop the application\n");
+		printf("Press Enter to start Posrridge Simulation\n");
 		printf("_______________________________________________________\n\n");
 
 		int stepCounter = 0;
-		
 
 		while ( bContinue )
 		{
-			gUpdateRateCounter++;
+
+			// ----- Get positions in m
+			haSendCommand(device, "get measpos", response);
+			ParseFloatVec(response, measPos.x, measPos.y, measPos.z);
+
+			// ----- Get velocities in m/s
+			haSendCommand(device, "get measvel", response);
+			ParseFloatVec(response, measVel.x, measVel.y, measVel.z);
+
+			// ----- Get forces in N
+			haSendCommand(device, "get measforce", response);
+			ParseFloatVec(response, measForce.x, measForce.y, measForce.z);
+
+			// ----- Send to destination IP
+			hapticData[0] = measPos.x;   hapticData[1] = measPos.y;   hapticData[2] = measPos.z;
+			hapticData[3] = measVel.x;   hapticData[4] = measVel.y;   hapticData[5] = measVel.z;
+			hapticData[6] = measForce.x; hapticData[7] = measForce.y; hapticData[8] = measForce.z;
+
+			virtualPos[0] = measPos.x;   virtualPos[1] = measPos.y;   virtualPos[2] = measPos.z;
+
+			if (stepCounter % 1000 == 0)
+			{
+				printf("\rStep %d: Position: %f, %f, %f; Damping factor %f",stepCounter,measPos.x, measPos.y, measPos.z,dampingFactor);
+				fflush(stdout);
+				/*printf("Step %d: Current damping factor %f\n",stepCounter,distBetweenPoints);
+			printf("currPoint: %f,%f,%f ; distance: %f\n", measPos.x, measPos.y, measPos.z, distBetweenPoints);*/
+			}
+			prevPos = Vector3d(measPos);
+			
+			int ret = sendto( s, (char *)hapticData, pkt_length, 0, (sockaddr *)&destination, sizeof(destination) ); // send packet
+			if(ret==SOCKET_ERROR){
+				std::cout<<"ERROR\n";
+				break;
+			}
+			
+			stepCounter ++;
+		}
+		
+		printf("\n_______________________________________________________\n");
+		printf("OPTIONS:\n");
+		printf("Porridge Environment Intitialised. Press Enter to quit.\n");
+		printf("_______________________________________________________\n\n");
+		
+		stepCounter = 0;
+		bContinue = true;
+		_beginthread(KbMon, 0, &bContinue);
+
+		while ( bContinue )
+		{
 
 			// ----- Get positions in m
 			haSendCommand(device, "get measpos", response);
@@ -443,7 +486,7 @@ int main(void)
 					haSendCommand(device, "set myDamper dampcoef", dampingFactor, dampingFactor, dampingFactor, response);
 					haSendCommand(device, "set myDamper enable", response);
 					if (stepCounter % 100 == 1){
-						printf("\rStep %d: Current damping factor %f",stepCounter,dampingFactor);
+						printf("\rStep %d: Position: %f, %f, %f; Damping factor %f",measPos.x, measPos.y, measPos.z,stepCounter,dampingFactor);
 						//printf("Current damping factor %f\n\n",measForce.length());
 						fflush(stdout);
 					}

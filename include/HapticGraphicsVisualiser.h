@@ -10,7 +10,7 @@
 #define PosY 1
 #define PosZ 2
 
-
+namespace HMVisualiser {
 //---------------------------------------------------------------------
 // O P E N G L   M A T E R I A L S
 //---------------------------------------------------------------------
@@ -64,8 +64,12 @@ struct Block {
 	double blockPos[3];
 	double blockSize[3];
 };
+struct Spring {
+	double SpringPos[3];
+};
 
 vector<Block> allBlocksList;
+vector<Spring> allSpringsList;
 
 void addBlock(double pos[3], double size[3])
 {	
@@ -79,6 +83,16 @@ void addBlock(double pos[3], double size[3])
 	newBlock.blockSize[2] = size[2];
 
 	allBlocksList.push_back(newBlock);
+}
+
+void addSpring(double pos[3])
+{
+	Spring newSpring = Spring();
+	newSpring.SpringPos[0] = pos[0];
+	newSpring.SpringPos[1] = pos[1];
+	newSpring.SpringPos[2] = pos[2];
+
+	allSpringsList.push_back(newSpring);
 }
 
 
@@ -344,112 +358,18 @@ void Display (void)
    // drawing can be done as in lab-frame rather than sgi-frame
    // (so X towards user, Z is up)
    gluLookAt (1.0, 0.0, 0.0, 0.0, 0.0, -0.03, 0.0, 0.0, 1.0);
-   // gluLookAt (0.3, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-   //gluLookAt (1.5, 0.015, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
    glutPostRedisplay();
    
-   //DrawMagneticField();
    for (vector<Block>::iterator it = allBlocksList.begin(); it != allBlocksList.end(); ++it)
    {
 	   createBlock(it->blockPos, it->blockSize);
    }
- /*  createBlock(blockPos1, blockSize1);
-   createBlock(blockPos2, blockSize2);*/
 
-   //createSpring(springPos);
-   //DrawBlock1();
-   //DrawBlock2();
-   //DrawBlock3();
-   //DrawBlock4();
-   //DrawBlock5(); //blocco sopra
-   //DrawBlock6();//blocco sotto
-   
-   //DrawBlock7();
-   
-   
-   /*int rotCu_11[3] = { 0, 0, 0};
-   DrawCubeGeneric(sizeCu_11, posCu_11, rotCu_11);
-
-   
-   int rotCu_12[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_12, posCu_12, rotCu_12);
-
-   
-   int rotCu_21[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_21, posCu_21, rotCu_21);
-
-   
-   int rotCu_22[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_22, posCu_22, rotCu_22);
-
-   
-   int rotCu_31[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_31, posCu_31, rotCu_31);
-
-   
-   int rotCu_32[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_32, posCu_32, rotCu_32);
-
-   
-   int rotCu_41[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_41, posCu_41, rotCu_41);
-
-   
-   int rotCu_42[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_42, posCu_42, rotCu_42);
-
-   
-
-   int rotCu_412[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_412, posCu_412, rotCu_412);
-
-   
-   int rotCu_422[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_422, posCu_422, rotCu_422);
-
-   
-   int rotCu_51[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_51, posCu_51, rotCu_51);*/
-  
-   /*
-   int rotCu_52[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_52, posCu_52, rotCu_52);
-
-   
-   int rotCu_52small[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_52small, posCu_52small, rotCu_52small);
-
-   
-   int rotCu_61[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_61, posCu_61, rotCu_61);
-
-   
-   int rotCu_61small[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_61small, posCu_61small, rotCu_61small);
-
-   
-   int rotCu_62[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_62, posCu_62, rotCu_62);
-
-   
-   int rotCu_71[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_71, posCu_71, rotCu_71);
-
-   int rotCu_72[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_72, posCu_72, rotCu_72);
-
-   
-   //int rotCu_72small[3] = { 0, 0, 0 };
-   //DrawCubeGeneric(sizeCu_72small, posCu_72small, rotCu_72small);
-   int rotCu_81[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_81, posCu_81, rotCu_81);
-
-   int rotCu_82[3] = { 0, 0, 0 };
-   DrawCubeGeneric(sizeCu_82, posCu_82, rotCu_82);
-   
-   */
-   //DrawSpring();
-   //DrawSpring1();
+   for (vector<Spring>::iterator it = allSpringsList.begin(); it != allSpringsList.end(); ++it)
+   {
+	   createSpring(it->SpringPos);
+   }
+ 
    DrawAxes();
   
    DrawEndEffector();
@@ -488,4 +408,6 @@ void Reshape(int iWidth, int iHeight)
  
    glMatrixMode (GL_MODELVIEW);
    glLoadIdentity ();
+}
+
 }
