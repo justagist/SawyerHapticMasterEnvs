@@ -421,8 +421,6 @@ int main(void)
 			{
 				printf("\rStep %d: Position: %f, %f, %f; Damping factor %f",stepCounter,measPos.x, measPos.y, measPos.z,dampingFactor);
 				fflush(stdout);
-				/*printf("Step %d: Current damping factor %f\n",stepCounter,distBetweenPoints);
-			printf("currPoint: %f,%f,%f ; distance: %f\n", measPos.x, measPos.y, measPos.z, distBetweenPoints);*/
 			}
 			prevPos = Vector3d(measPos);
 			

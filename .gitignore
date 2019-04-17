@@ -8,4 +8,5 @@ Release/
 *.opensdf
 *.filters
 *.suo
+ipch/
 

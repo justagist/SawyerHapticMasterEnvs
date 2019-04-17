@@ -93,8 +93,6 @@
     <ClInclude Include="include\HapticGraphicsVisualiser.h" />
     <ClInclude Include="include\HapticMaster.h" />
     <ClInclude Include="include\HapticMasterOpenGl.h" />
-    <ClInclude Include="include\HapticSettings.h" />
-    <ClInclude Include="Timer.h" />
     <ClInclude Include="Vector3d.h" />
   </ItemGroup>
   <ItemGroup>
