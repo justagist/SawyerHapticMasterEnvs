@@ -86,17 +86,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="HapticAPI.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\HapticAPI.h" />
     <ClInclude Include="include\HapticGraphicsVisualiser.h" />
-    <ClInclude Include="include\HapticMaster.h" />
-    <ClInclude Include="include\HapticMasterOpenGl.h" />
+    <ClInclude Include="include\porridgeEnv.h" />
     <ClInclude Include="Vector3d.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="porridgeEnvSetup.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

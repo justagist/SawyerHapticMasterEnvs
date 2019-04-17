@@ -1,10 +1,14 @@
 // HapticGraphics.h
 // header for virtual environment
+#ifndef _HM_VISUALISER_
+#define _HM_VISUALISER_
 
 #include "HapticAPI.h"
 #include "HapticMaster.h"
 #include "HapticMasterOpenGl.h"
 #include "glut.h"
+#include <vector>
+using namespace std;
 
 #define PosX 0
 #define PosY 1
@@ -59,6 +63,7 @@ GLfloat ShininessOff = {0.00};
 //---------------------------------------------------------------------
 //                 O B J E C T   P A R A M E T E R S
 //---------------------------------------------------------------------
+double virtualPos[3] = {0.0, 0.0, 0.0};
 
 struct Block {
 	double blockPos[3];
@@ -411,3 +416,5 @@ void Reshape(int iWidth, int iHeight)
 }
 
 }
+
+#endif
