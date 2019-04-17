@@ -2,3 +2,10 @@
 *.vcxproj.user
 bin/
 data/
+Debug/
+Release/
+*.sdf
+*.opensdf
+*.filters
+*.suo
+

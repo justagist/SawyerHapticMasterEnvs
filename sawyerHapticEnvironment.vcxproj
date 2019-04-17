@@ -86,29 +86,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="porridgeEnvSetup.cpp" />
-    <ClCompile Include="Timer.cpp" />
+    <None Include="HapticAPI.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="glut.h" />
-    <ClInclude Include="HapticAPI.h" />
-    <ClInclude Include="HapticGraphics.h" />
-    <ClInclude Include="HapticMaster.h" />
-    <ClInclude Include="HapticMasterOpenGl.h" />
-    <ClInclude Include="HapticSettings.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="resource1.h" />
+    <ClInclude Include="include\HapticAPI.h" />
+    <ClInclude Include="include\HapticGraphicsVisualiser.h" />
+    <ClInclude Include="include\HapticMaster.h" />
+    <ClInclude Include="include\HapticMasterOpenGl.h" />
+    <ClInclude Include="include\HapticSettings.h" />
+    <ClInclude Include="include\Timer.h" />
+    <ClInclude Include="include\Vector3d.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Vector3d.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="HapticAPI.dll" />
-    <None Include="hapticMasterUDP.sdf" />
-    <None Include="icon1.ico" />
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="hapticMasterUDP.rc" />
+    <ClCompile Include="porridgeEnvSetup.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

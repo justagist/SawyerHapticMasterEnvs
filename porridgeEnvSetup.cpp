@@ -4,11 +4,11 @@
 using namespace std;
 #include <process.h>
 
-#include "HapticAPI.h"
-#include "HapticMaster.h"
-#include "HapticMasterOpenGl.h"
+#include "include/HapticAPI.h"
+#include "include/HapticMaster.h"
+#include "include/HapticMasterOpenGl.h"
 #include "glut.h"
-#include "Vector3d.h"
+#include "include/Vector3d.h"
 #include <Windows.h>
 #include <math.h>
 #include <random>
@@ -38,7 +38,7 @@ double dampingFactor = 0.0; // starting damping factor
 
 double virtualPos[3] = {0.0, 0.0, 0.0};
 
-#include "HapticGraphicsVisualiser.h"
+#include "include/HapticGraphicsVisualiser.h"
 
 // ----- Global variables
 bool bContinue = true;
