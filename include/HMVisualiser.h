@@ -1,5 +1,14 @@
-// HapticGraphics.h
-// header for virtual environment
+//*********************************************************************
+//
+// package : SawyerHapticMasterEnvs
+// file    : HMVisualiser.h
+// purpose : Functions, utilities and global variables for 
+//           visualising environments
+//
+// author  : Saif Sidhik
+// email   : sxs1412@bham.ac.uk
+//
+//*********************************************************************
 #ifndef _HM_VISUALISER_
 #define _HM_VISUALISER_
 
@@ -14,8 +23,6 @@ using namespace std;
 #define PosY 1
 #define PosZ 2
 
-
-
 namespace HMVisualiser {
 //---------------------------------------------------------------------
 // O P E N G L   M A T E R I A L S
@@ -27,25 +34,10 @@ GLfloat EndEffectorDiffuse[] = {0.90, 0.38, 0.00, 1.00}; // {0.50, 0.50, 0.50, 1
 // Arrow OpenGL Material Parameters.
 GLfloat ArrowAmbient[] = {1.00, 0.00, 1.00, 1.00};
 GLfloat ArrowDiffuse[] = {0.97, 0.0, 0.97, 1.00};
-//-------------------------------------------------------------------------------------------//
-// Block OpenGL Material Parameters.
-GLfloat BlockAmbient1[] = {0.00, 0.66, 0.60, 1.00};
-GLfloat BlockAmbient2[] = {0.00, 0.66, 0.60, 1.00};
-GLfloat BlockAmbient3[] = {0.50, 0.50, 1.00, 1.00};
-GLfloat BlockAmbient4[] = {1.00, 0.50, 0.50, 1.00};
-GLfloat BlockAmbient5[] = {0.00, 0.66, 0.60, 1.00};
-GLfloat BlockAmbient6[] = {0.00, 0.66, 0.60, 1.00};
-GLfloat BlockAmbient7[] = {0.00, 0.66, 0.60, 1.00};
 
-GLfloat BlockDiffuse[] = {0.50, 0.50, 0.50, 1.00};
-GLfloat BlockDiffuse7[] = {0.00, 0.80, 0.67, 0.58};
+GLfloat BlockAmbient[] = {0.00, 0.66, 0.60, 1.00};
 
-// Floor Object OpenGL Material Parameters
-GLfloat FloorAmbient[] = {0.00, 0.66, 0.60, 1.00}; 
-GLfloat FloorDiffuse[] = {0.00, 0.66, 0.60, 0.25}; 
-
-GLfloat FloorAmbient2[] = {1.00, 1.00, 1.00, 1.00};
-GLfloat FloorDiffuse2[] = {1.00, 1.00, 1.00, 1.00};
+GLfloat BlockDiffuse[] = {0.00, 0.80, 0.67, 0.58};
 
 // Spring OpenGL Material Parameters.
 GLfloat SpringAmbient[] = {1.00, 0.00, 1.00, 1.00};
@@ -58,9 +50,7 @@ GLfloat Shininess = {128.00};
 GLfloat Specular7[] = {1.00, 1.00, 1.00, 1.00};
 GLfloat Emissive7[] = {0.00, 0.00, 0.00, 0.2500};
 GLfloat Shininess7 = {128.00};
-GLfloat SpecularOff[] = {0.00, 0.00, 0.00, 0.00};
-GLfloat EmissiveOff[] = {0.50, 0.50, 0.50, 0.00};
-GLfloat ShininessOff = {0.00};
+
 
 //---------------------------------------------------------------------
 //                 O B J E C T   P A R A M E T E R S
@@ -106,10 +96,10 @@ void addSpring(double pos[3])
 //---------------------------------------------------------------------
 //              E N D   E F F E C T O R   M A T E R I A L
 //
-// EndEffectorMaterial() Sets The Current OpenGl Material Paremeters. 
+// endEffectorMaterial() Sets The Current OpenGl Material Paremeters. 
 // Call This Function Prior To Drawing The EndEffector.
 //---------------------------------------------------------------------
-void EndEffectorMaterial()
+void endEffectorMaterial()
 {
 
    glMaterialfv(GL_FRONT, GL_AMBIENT, EndEffectorAmbient);
@@ -123,67 +113,19 @@ void EndEffectorMaterial()
 //---------------------------------------------------------------------
 //                     B L O C K   M A T E R I A L
 //
-// BlockMaterial() Sets The Current OpenGl Material Paremeters. 
+// blockMaterial() Sets The Current OpenGl Material Paremeters. 
 // Call This Function Prior To Drawing The Block.
 //---------------------------------------------------------------------
-void BlockMaterial()
+void blockMaterial()
 {
-   glMaterialfv(GL_FRONT, GL_AMBIENT, BlockAmbient7);
-   glMaterialfv(GL_FRONT, GL_DIFFUSE, BlockDiffuse7);
+   glMaterialfv(GL_FRONT, GL_AMBIENT, BlockAmbient);
+   glMaterialfv(GL_FRONT, GL_DIFFUSE, BlockDiffuse);
    glMaterialfv(GL_FRONT, GL_SPECULAR, Specular7);
    glMaterialfv(GL_FRONT, GL_EMISSION, Emissive7);
    glMaterialf(GL_FRONT, GL_SHININESS, Shininess7);
 }
 
-//----------------------------------------------------------------------------DESIGN
 
-//---------------------------------------------------------------------
-// DRAW FLOOR
-//
-// This Function Is Called To Draw The Graphic Equivalent Of 
-// The Floor In OpenGl.
-//---------------------------------------------------------------------
-// Location And Size Parameters For The Haptic Floor Plane Object
-double FloorCenter[3] = {0.0, 0.0, -0.5};
-double FloorSize[3] = {0.3, 0.3, 1.0}; 
-
-double FloorCenterV[3] = {0.0, 0.0, -0.2}; 
-double FloorSizeV[3] = {0.05, 0.05, 0.4}; 
-void FloorMaterial()
-{
-   glMaterialfv(GL_FRONT, GL_AMBIENT, FloorAmbient);
-   glMaterialfv(GL_FRONT, GL_DIFFUSE, FloorDiffuse);
-   glMaterialfv(GL_FRONT, GL_SPECULAR, SpecularOff); 
-   glMaterialfv(GL_FRONT, GL_EMISSION, Emissive);
-   glMaterialf(GL_FRONT, GL_SHININESS, ShininessOff);
-}
-
-void FloorMaterial2()
-{
-   glMaterialfv(GL_FRONT, GL_AMBIENT, FloorAmbient2);
-   glMaterialfv(GL_FRONT, GL_DIFFUSE, FloorDiffuse2);
-   glMaterialfv(GL_FRONT, GL_SPECULAR, SpecularOff); 
-   glMaterialfv(GL_FRONT, GL_EMISSION, Emissive);
-   glMaterialf(GL_FRONT, GL_SHININESS, ShininessOff);
-
-}
-void DrawFloor(void)
-{
-   FloorMaterial();
-   glTranslatef(FloorCenterV[0], FloorCenterV[1], FloorCenterV[2]);
-   glScalef(FloorSizeV[0], FloorSizeV[1], FloorSizeV[2]);
-   glutSolidCube(1.0);
-}
-
-void DrawFloor2(void) // wireframe
-{
-   FloorMaterial2();
-   glPushMatrix();
-   glTranslatef(FloorCenterV[0], FloorCenterV[1], FloorCenterV[2]);
-   glScalef(FloorSizeV[0], FloorSizeV[1], FloorSizeV[2]);
-   glutWireCube(1.0);
-   glPopMatrix();
-}
 
 //---------------------------------------------------------------------
 //                  D R A W   E N D   E F F E C T O R
@@ -192,9 +134,9 @@ void DrawFloor2(void) // wireframe
 // The EndEffector In OpenGl.
 // The EndEffector Is Drawn At The Current Position
 //---------------------------------------------------------------------
-void DrawEndEffector(void)
+void drawEndEffector(void)
 {
-   EndEffectorMaterial();
+   endEffectorMaterial();
    glPushMatrix();
    glTranslatef(virtualPos[PosX], virtualPos[PosY], virtualPos[PosZ]);
    glutSolidSphere(0.005, 20, 20); // (0.005, 20, 20);
@@ -207,7 +149,7 @@ void DrawEndEffector(void)
 //
 // This Function Is Called To Draw one arrow in the magnetic field
 //---------------------------------------------------------------------
-void ArrowMaterial()
+void arrowMaterial()
 {
    glMaterialfv(GL_FRONT, GL_AMBIENT, ArrowAmbient);
    glMaterialfv(GL_FRONT, GL_DIFFUSE, ArrowDiffuse);
@@ -215,9 +157,9 @@ void ArrowMaterial()
    glMaterialfv(GL_FRONT, GL_EMISSION, Emissive);
    glMaterialf(GL_FRONT, GL_SHININESS, Shininess);
 }
-void DrawArrow(double arrowXPos, double arrowYPos)
+void arawArrow(double arrowXPos, double arrowYPos)
 {
-   ArrowMaterial();
+   arrowMaterial();
 
    glBegin(GL_LINES);
       //glVertex3f(arrowXPos, 0.07, arrowZPos);
@@ -251,51 +193,30 @@ void DrawArrow(double arrowXPos, double arrowYPos)
 //
 // This Function Is Called To Draw The magnetic field
 //---------------------------------------------------------------------
-void DrawMagneticField(void)
+void drawMagneticField(void)
 {
    for (int i = -1; i <= 1; i++) {
       for (int j = -1; j <= 1; j++) {
          double tempX = i * 0.15;
          double tempZ = j * 0.15;
-         DrawArrow(tempX, tempZ);
+         arawArrow(tempX, tempZ);
       }
    }
 }
 
-//-------------------------------------------------------------------//
 
-void DrawCubeGeneric(double size, double position[3], int rotation[3])
+void drawBlock(double position[3], double size[3])
 {
-	BlockMaterial();
-	glPushMatrix();
-
-	if (rotation[0] != 0)
-		glRotatef(rotation[0], 1.0, 0.0, 0.0);
-	if (rotation[1] != 0)
-		glRotatef(rotation[1], 0.0, 1.0, 0.0);
-	if (rotation[2] != 0)
-		glRotatef(rotation[2], 0.0, 0.0, 1.0);
-
-	glTranslatef(position[PosX], position[PosY], position[PosZ]);
-	//glScalef(size,size,size);
-	BlockMaterial();
-	glutSolidCube(size);
-	
-	glPopMatrix();
-}
-
-void createBlock(double position[3], double size[3])
-{
-	BlockMaterial();
+	blockMaterial();
 	glPushMatrix();
 	glTranslatef(position[PosX], position[PosY], position[PosZ]);
 	glScalef(size[0], size[1], size[2]);
-	BlockMaterial();
+	blockMaterial();
 	glutSolidCube(1.0);
 	glPopMatrix();
 }
 
-void SpringMaterial()
+void springMaterial()
 {
    glMaterialfv(GL_FRONT, GL_AMBIENT, SpringAmbient);
    glMaterialfv(GL_FRONT, GL_DIFFUSE, SpringDiffuse);
@@ -304,9 +225,9 @@ void SpringMaterial()
    glMaterialf(GL_FRONT, GL_SHININESS, Shininess);
 }
 
-void createSpring(double position[3])
+void drawSpring(double position[3])
 {
-	SpringMaterial();
+	springMaterial();
 	glLineWidth(10);
 	glBegin(GL_LINES);
 		glVertex3f(virtualPos[PosX], virtualPos[PosY], virtualPos[PosZ]);
@@ -315,15 +236,12 @@ void createSpring(double position[3])
 	glLineWidth(1);
 }
 
-
-
-
 //---------------------------------------------------------------------
 //                         I N I T   O P E N   G L
 //
 // This Function Initializes the OpenGl Graphics Engine
 //---------------------------------------------------------------------
-void InitOpenGl (void)
+void initOpenGl (void)
 {
 
    glShadeModel(GL_SMOOTH);
@@ -356,7 +274,7 @@ void InitOpenGl (void)
 // This Function Is Called By OpenGL To Redraw The Scene
 // Here's Where You Put The EndEffector And Block Drawing FuntionCalls
 //---------------------------------------------------------------------
-void Display (void)
+void display (void)
 {
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glPushMatrix ();
@@ -369,28 +287,17 @@ void Display (void)
    
    for (vector<Block>::iterator it = allBlocksList.begin(); it != allBlocksList.end(); ++it)
    {
-	   createBlock(it->blockPos, it->blockSize);
+	   drawBlock(it->blockPos, it->blockSize);
    }
 
    for (vector<Spring>::iterator it = allSpringsList.begin(); it != allSpringsList.end(); ++it)
    {
-	   createSpring(it->SpringPos);
+	   drawSpring(it->SpringPos);
    }
  
    DrawAxes();
   
-   DrawEndEffector();
-   
-   
-   //-------------------------------------------//
-
-   //-------------------------------------------//
-   //DrawBlock2();
-   //DrawFloor2(); // wireframe
-   //DrawFloor();
-   
-   
-   //DrawMagneticField();
+   drawEndEffector();
    
    glPopMatrix ();
    glutSwapBuffers();
@@ -401,7 +308,7 @@ void Display (void)
 //
 // The Function Is Called By OpenGL Whenever The Window Is Resized
 //---------------------------------------------------------------------
-void Reshape(int iWidth, int iHeight)
+void reshape(int iWidth, int iHeight)
 {
    //cout << "width " << iWidth << endl; 
    glViewport (-0, 0, (GLsizei)iWidth, (GLsizei)iHeight);
@@ -410,31 +317,28 @@ void Reshape(int iWidth, int iHeight)
 
    float fAspect = (float)iWidth/iHeight;
    gluPerspective (30.0, fAspect, 0.05, 20.0); 
-
-   //gluLookAt (0.0, -5.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
- 
    glMatrixMode (GL_MODELVIEW);
    glLoadIdentity ();
 }
 
-void Graphics(void *pParam)
+void graphicsThread(void *pParam)
 {
    // ----- OpenGL Initialization Calls
    char *myargv [1];
    int myargc=1;
-   myargv [0]=strdup ("Myappname");
+   myargv [0]=strdup ("SawyerVarImpedance");
    glutInit(&myargc, myargv);
    glutInitDisplayMode (GLUT_DOUBLE| GLUT_RGB | GLUT_DEPTH);
    glutInitWindowSize (800, 600);
 
    // ----- Create The OpenGlWindow
 
-   glutCreateWindow ("HapticAPI Programming Manual : Example07: More Haptic effects");
+   glutCreateWindow ("Sawyer Virtual Environment");
    haSendCommand( device, "get modelpos", response );
-   HMVisualiser::InitOpenGl();
+   HMVisualiser::initOpenGl();
 
-   glutReshapeFunc(HMVisualiser::Reshape);
-   glutDisplayFunc(HMVisualiser::Display);
+   glutReshapeFunc(HMVisualiser::reshape);
+   glutDisplayFunc(HMVisualiser::display);
    glutMainLoop();
 
    _endthread();

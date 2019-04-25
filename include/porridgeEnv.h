@@ -1,4 +1,13 @@
-
+//*********************************************************************
+//
+// package : SawyerHapticMasterEnvs
+// file    : PorridgeEnv.h
+// purpose : Simulation for Porridge Stirring Task
+//
+// author  : Saif Sidhik
+// email   : sxs1412@bham.ac.uk
+//
+//*********************************************************************
 #ifndef _PORRIDGE_ENV_
 #define _PORRIDGE_ENV_
 #include <conio.h>
@@ -6,10 +15,9 @@
 #include <iostream>
 using namespace std;
 #include <process.h>
-#define IPADDRESS "10.0.11.12" // default IP
-#define SECONDS_TO_LOG 20.0
 
-#include "include/HapticGraphicsVisualiser.h"
+
+#include "include/HMVisualiser.h"
 #include "include/HMThreads.h"
 #include "include/Vector3d.h"
 
@@ -64,11 +72,8 @@ class PorridgeEnv
 		blockStiffnessEnv = 20000.0; // stiffness of blocks
 		dampingFactor = minDampFactor; // starting damping factor 
 
-
-
 		visualiseEnv = visualise;
-		// ----- Global variables
-		bContinue = true;
+				bContinue = true;
 		
 		
 	}
@@ -251,7 +256,7 @@ class PorridgeEnv
 			_beginthread(HMThreads::UDPrecv, 0, &bContinue);
 			if (visualiseEnv)
 			{
-				_beginthread(HMVisualiser::Graphics, 0, &bContinue);
+				_beginthread(HMVisualiser::graphicsThread, 0, &bContinue);
 			}
 
 			setInitEnv();

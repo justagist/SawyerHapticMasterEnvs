@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClInclude Include="include\HapticGraphicsVisualiser.h" />
     <ClInclude Include="include\HMThreads.h" />
+    <ClInclude Include="include\HMVisualiser.h" />
     <ClInclude Include="include\PorridgeEnv.h" />
     <ClInclude Include="include\SpringEnv.h" />
     <ClInclude Include="Vector3d.h" />

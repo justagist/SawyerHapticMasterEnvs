@@ -1,4 +1,13 @@
-
+//*********************************************************************
+//
+// package : SawyerHapticMasterEnvs
+// file    : SpringEnv.h
+// purpose : Simulation for Spring Pulling Task
+//
+// author  : Saif Sidhik
+// email   : sxs1412@bham.ac.uk
+//
+//*********************************************************************
 #ifndef _SPRING_ENV_
 #define _SPRING_ENV_
 #include <conio.h>
@@ -6,10 +15,8 @@
 #include <iostream>
 using namespace std;
 #include <process.h>
-#define IPADDRESS "10.0.11.12" // default IP
-#define SECONDS_TO_LOG 20.0
 
-#include "include/HapticGraphicsVisualiser.h"
+#include "include/HMVisualiser.h"
 #include "include/HMThreads.h"
 #include "include/Vector3d.h"
 
@@ -58,7 +65,7 @@ class SpringEnv
 		springPos[0] = springPosition[0]; springPos[1] = springPosition[1]; springPos[2] = springPosition[2];
 		makeSpringHere = SpringAtCurrPos;		
 		visualiseEnv = visualise;
-		// ----- Global variables
+
 		bContinue = true;
 	}
 
@@ -187,7 +194,7 @@ class SpringEnv
 			_beginthread(HMThreads::UDPrecv, 0, &bContinue);
 			if (visualiseEnv)
 			{
-				_beginthread(HMVisualiser::Graphics, 0, &bContinue);
+				_beginthread(HMVisualiser::graphicsThread, 0, &bContinue);
 			}
 
 			setInitEnv();

@@ -1,4 +1,13 @@
-
+//*********************************************************************
+//
+// package : SawyerHapticMasterEnvs
+// file    : HMThreads.h
+// purpose : Function handles that are usually run in parallel
+//
+// author  : Saif Sidhik
+// email   : sxs1412@bham.ac.uk
+//
+//*********************************************************************
 #ifndef _HM_THREADS_
 #define _HM_THREADS_
 
@@ -12,6 +21,8 @@
 
 namespace HMThreads {
 
+
+// ----- Keyboard Monitoring Thread
 void KbMon(void *pParam)
 {
 	while ( *((bool*)pParam) )
@@ -37,6 +48,7 @@ void KbMon(void *pParam)
 	_endthread();
 }
 
+// ----- Thread for recieving UDP messages from robot
 void UDPrecv(void *pParam)
 {
 	struct sockaddr_in serverAddr;
