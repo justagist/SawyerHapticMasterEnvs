@@ -14,6 +14,8 @@ using namespace std;
 #define PosY 1
 #define PosZ 2
 
+
+
 namespace HMVisualiser {
 //---------------------------------------------------------------------
 // O P E N G L   M A T E R I A L S
@@ -413,6 +415,29 @@ void Reshape(int iWidth, int iHeight)
  
    glMatrixMode (GL_MODELVIEW);
    glLoadIdentity ();
+}
+
+void Graphics(void *pParam)
+{
+   // ----- OpenGL Initialization Calls
+   char *myargv [1];
+   int myargc=1;
+   myargv [0]=strdup ("Myappname");
+   glutInit(&myargc, myargv);
+   glutInitDisplayMode (GLUT_DOUBLE| GLUT_RGB | GLUT_DEPTH);
+   glutInitWindowSize (800, 600);
+
+   // ----- Create The OpenGlWindow
+
+   glutCreateWindow ("HapticAPI Programming Manual : Example07: More Haptic effects");
+   haSendCommand( device, "get modelpos", response );
+   HMVisualiser::InitOpenGl();
+
+   glutReshapeFunc(HMVisualiser::Reshape);
+   glutDisplayFunc(HMVisualiser::Display);
+   glutMainLoop();
+
+   _endthread();
 }
 
 }
