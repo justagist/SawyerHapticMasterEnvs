@@ -10,23 +10,13 @@ using namespace std;
 #define SECONDS_TO_LOG 20.0
 
 #include "include/HapticGraphicsVisualiser.h"
+#include "include/HMThreads.h"
 #include "include/Vector3d.h"
-#include <Windows.h>
-#include <math.h>
-#include <random>
-#include <ws2tcpip.h>
-#include <time.h>
-#include <cstdlib>
-#include <sys/timeb.h>
+
 
 namespace sawyerEnvs{
 
-double recvData[3];
-double *precvData = recvData;
-char response[100];
-int device;
-
-class porridgeEnv 
+class PorridgeEnv 
 {
 
 	private:
@@ -34,57 +24,34 @@ class porridgeEnv
 		double blockStiffnessEnv; // stiffness of blocks
 		double dampingFactor; // starting damping factor 
 
-		// ----- Global variables
-		
-		
-
 		double distBetweenPoints;
 		Vector3d prevPos;
+
 
 		bool visualiseEnv;
 				
 		bool bContinue;
 
-		FILE *fp;
-		float** theMatrix;
-		int matrixColumnCount;
-
-		double PCFreq;
-		__int64 CounterStart;
-
-		void StartCounter();
-
-		double GetCounter();
-
-		int GetMilliCount();
-
-		int GetMilliSpan(int nTimeStart);
-
-		//static void KbMon(void *pParam);
-
 		int constrainPlaneNormal;
-
-		//void UDPrecv(void *pParam);
 
 		double planePlay[2];
 
-		//void Graphics(void *pParam);
-
 		double maxDampingFactor, dampingIncrement, minVelToChangeDamping;
+
 		/* 
 		 Constrain robot motion to a plane (with some play)
 		*/
 		void setInitEnv();
 
 	public:
-		porridgeEnv(int device_id, int constrainNormal, double planeTolerance[2],  double minDampFactor, double maxDampingFctr, double dampInc, double minVelThreshold, bool visualise = false);
-		//~porridgeEnv();
+		PorridgeEnv(int constrainNormal, double planeTolerance[2],  double minDampFactor, double maxDampingFctr, double dampInc, double minVelThreshold, bool visualise = false);
+		//~PorridgeEnv();
 
 		int mainloop();
 
 };
 
-porridgeEnv::porridgeEnv(int device_id, int constrainNormal, double planeTolerance[2], double minDampFactor, double maxDampingFctr, double dampInc, double minVelThreshold, bool visualise) {
+	PorridgeEnv::PorridgeEnv(int constrainNormal, double planeTolerance[2], double minDampFactor, double maxDampingFctr, double dampInc, double minVelThreshold, bool visualise) {
 		
 		maxDampingFactor = maxDampingFctr;
 		dampingIncrement = dampInc;
@@ -93,7 +60,7 @@ porridgeEnv::porridgeEnv(int device_id, int constrainNormal, double planeToleran
 		planePlay[0] = planeTolerance[0]; planePlay[1] = planeTolerance[1];
 
 		constrainPlaneNormal = constrainNormal;
-		device = device_id;
+		
 		blockStiffnessEnv = 20000.0; // stiffness of blocks
 		dampingFactor = minDampFactor; // starting damping factor 
 
@@ -104,147 +71,9 @@ porridgeEnv::porridgeEnv(int device_id, int constrainNormal, double planeToleran
 		bContinue = true;
 		
 		
-		matrixColumnCount = 0;
 	}
 
-	//porridgeEnv::~porridgeEnv(){}
-
-	void porridgeEnv::StartCounter()
-	{
-		LARGE_INTEGER li;
-		if(!QueryPerformanceCounter(&li))
-			std::cout << "QUesryPerformanceCounter failed!\n";
-
-		PCFreq = double(li.QuadPart)/1000.0;
-
-		QueryPerformanceCounter(&li);
-		CounterStart = li.QuadPart;
-
-	}
-
-	double porridgeEnv::GetCounter()
-	{
-		LARGE_INTEGER li;
-		QueryPerformanceCounter(&li);
-		return double(li.QuadPart - CounterStart)/PCFreq;
-	}
-
-	int porridgeEnv::GetMilliCount()
-	{
-		timeb tb;
-		ftime(&tb);
-		int nCount = tb.millitm + (tb.time & 0xfffff)*1000;
-		return nCount;
-	}
-
-	int porridgeEnv::GetMilliSpan(int nTimeStart)
-	{
-		int nSpan = GetMilliCount() - nTimeStart;
-		if(nSpan < 0){
-			nSpan += 0x100000*1000;
-
-		}
-		return nSpan;
-	}
-
-	/////
-	void KbMon(void *pParam)
-	{
-		while ( *((bool*)pParam) )
-		{  
-      
-			Sleep(1000);
-
-			if ( _kbhit() )
-			{
-				switch(_getch())
-				{
-				case 27 :
-					// ----- Escape will end the application
-					*((bool*)pParam) = false;
-					break;
-				default :
-					// ----- any other key will also end the application
-					*((bool*)pParam) = false;
-					break;
-				}
-			}
-		}
-		_endthread();
-	}
-
-
-	void UDPrecv(void *pParam)
-	{
-		struct sockaddr_in serverAddr;
-		struct sockaddr_in clientAddr;
-		WSADATA wsaData;
-		SOCKET serverSock;
-		int len=sizeof(struct sockaddr);
-		unsigned short serverPort = 45156;
-
-		if (WSAStartup(0x0202,&wsaData) != 0)
-		{
-			fprintf(stderr, "Could not open Windows connection.\n");
-			exit(1);
-		}
-
-		memset((char*)&serverAddr,0,sizeof(serverAddr));
-		serverAddr.sin_family=AF_INET;
-		serverAddr.sin_addr.s_addr=INADDR_ANY;
-		serverAddr.sin_port=htons(serverPort);
-
-		serverSock = socket(AF_INET, SOCK_DGRAM, 0);
-		if (serverSock < 0)
-		{
-			fprintf(stderr, "Could not create receive socket.\n");
-			WSACleanup();
-			exit(1);
-		}
-
-		if (bind(serverSock,(LPSOCKADDR)&serverAddr,len)<0)
-		{
-			fprintf(stderr,"Binding receive socket failed.\n");
-			exit(1);
-		}
-
-		while ( *((bool*)pParam) )
-		{
-			int status = recvfrom(serverSock,(char *)precvData,24,0,(LPSOCKADDR)&clientAddr,&len);
-
-		}
-
-		closesocket(serverSock);
-		WSACleanup();
-
-		_endthread();
-	}
-
-	void Graphics(void *pParam)
-	{
-		// ----- OpenGL Initialization Calls
-		char *myargv [1];
-		int myargc=1;
-		myargv [0]=strdup ("Myappname");
-		glutInit(&myargc, myargv);
-		glutInitDisplayMode (GLUT_DOUBLE| GLUT_RGB | GLUT_DEPTH);
-		glutInitWindowSize (800, 600);
-
-		// ----- Create The OpenGlWindow
-	
-		glutCreateWindow ("HapticAPI Programming Manual : Example07: More Haptic effects");
-		haSendCommand( device, "get modelpos", response );
-		HMVisualiser::InitOpenGl();
-
-		glutReshapeFunc(HMVisualiser::Reshape);
-		glutDisplayFunc(HMVisualiser::Display);
-		glutMainLoop();
-
-		_endthread();
-	}
-
-
-	void porridgeEnv::setInitEnv()
+	void PorridgeEnv::setInitEnv()
 	{
 
 		haSendCommand(device, "get measpos", response);
@@ -346,7 +175,7 @@ porridgeEnv::porridgeEnv(int device_id, int constrainNormal, double planeToleran
 		
 	}
 
-	int porridgeEnv::mainloop()
+	int PorridgeEnv::mainloop()
 	{
 		// ----- Set the variables to their default values
 		double effInertia = 4.0;
@@ -418,11 +247,11 @@ porridgeEnv::porridgeEnv(int device_id, int constrainNormal, double planeToleran
 				printf("device: set inertia ==> %s\n", response);
 				getchar(); exit(-1);
 			}
-			_beginthread(KbMon, 0, &bContinue);
-			_beginthread(UDPrecv, 0, &bContinue);
+			_beginthread(HMThreads::KbMon, 0, &bContinue);
+			_beginthread(HMThreads::UDPrecv, 0, &bContinue);
 			if (visualiseEnv)
 			{
-				_beginthread(Graphics, 0, &bContinue);
+				_beginthread(HMVisualiser::Graphics, 0, &bContinue);
 			}
 
 			setInitEnv();
@@ -460,6 +289,7 @@ porridgeEnv::porridgeEnv(int device_id, int constrainNormal, double planeToleran
 
 				if (stepCounter % 1000 == 0)
 				{
+					fflush(stdout);
 					printf("\rStep %d: Position: %f, %f, %f; Damping factor %f",stepCounter,measPos.x, measPos.y, measPos.z,dampingFactor);
 					fflush(stdout);
 				}
@@ -481,7 +311,7 @@ porridgeEnv::porridgeEnv(int device_id, int constrainNormal, double planeToleran
 		
 			stepCounter = 0;
 			bContinue = true;
-			_beginthread(KbMon, 0, &bContinue);
+			_beginthread(HMThreads::KbMon, 0, &bContinue);
 
 			while ( bContinue )
 			{
